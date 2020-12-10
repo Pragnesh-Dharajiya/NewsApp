@@ -11,9 +11,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-
 import {Card} from 'native-base';
-
 import likeListIcon from '../global/likeListIcon';
 import userHomeIcon from '../global/userHomeListIcon';
 import moment from 'moment';
@@ -31,47 +29,20 @@ const HomeScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(1);
   const [isListEnd, setIsListEnd] = useState(false);
-  useEffect(() => getData(), []);
-  const getData = () => {
-    console.log(offset);
-    if (!loading && !isListEnd) {
-      
-      setLoading(true);
-      fetch(
-        'https://newsapi.org/v2/top-headlines?country=in&apiKey=7dd89414727643baaa66b6369bddf598&offset=' +
-          offset,
-      )
-        .then((response) => response.json())
-        .then((responseJson) => {
-          
-          if (responseJson.articles.length > 0) {
-            setOffset(offset + 1);
-            setArticles([...articles, ...responseJson.articles]);
-            setLoading(false);
-          } else {
-            setIsListEnd(true);
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  };
 
-  // useEffect(() => {
-  //   fetch(URL)
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-  //       return responseJson.articles;
-  //     })
-  //     .then((articles) => {
-  //       setArticles(articles);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(URL)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        return responseJson.articles;
+      })
+      .then((articles) => {
+        setArticles(articles);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const renderFooter = () => {
     return (
@@ -167,7 +138,9 @@ const HomeScreen = ({navigation}) => {
         data={articles}
         renderItem={({item}) => <ArticleItem article={item} />}
         ListFooterComponent={renderFooter}
-        onEndReached={getData}
+        initialNumToRender={8}
+  maxToRenderPerBatch={2}
+ 
         onEndReachedThreshold={0.5}
       />
     </View>
@@ -179,13 +152,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  articleContainer: {
-    borderWidth: 0,
-    width: '100%',
-    padding: 5,
-  },
+  articleContainer: {},
   articleImage: {
     height: 200,
+    borderRadius: 10,
   },
   articleTitle: {
     textAlign: 'center',

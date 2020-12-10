@@ -14,6 +14,8 @@ import CustomSidebarMenu from '../src/screens/CustomSidebarMenu';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ProfileScreen from '../src/screens/ProfileScreen';
 import Icon from 'react-native-ionicons';
+import LoginScreen from '../src/screens/LoginScreen';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,8 +33,6 @@ const TabStack = ({navigation}) => {
           } else if (route.name === 'Profile') {
             iconName = focused ? 'contact' : 'contact';
           }
-
-          // You can return any component that you like here!
           return (
             <Icon ios={iconName} android={iconName} size={size} color={color} />
           );
@@ -162,16 +162,63 @@ function Home({navigation}) {
     </Stack.Navigator>
   );
 }
+function DrawerHome({navigation}) {
+  return (
+    <Drawer.Navigator
+      drawerType="slide"
+      screenOptions={{headerShown: false}}
+      drawerContent={(props) => <CustomSidebarMenu {...props} />}>
+      <Drawer.Screen name="Home" component={TabStack} />
+    </Drawer.Navigator>
+  );
+}
+function SignIn() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="login"
+        options={{headerShown: false}}
+        component={LoginScreen}
+      />
+    </Stack.Navigator>
+  );
+}
 
 const RouteApp = ({navigation}) => {
+  const [authenticated, setAuthenticated] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem('userData')
+      .then((res) => {
+        let userInfo = JSON.parse(res);
+        store.dispatch({type: 'USER_DATA', payload: userInfo});
+        setAuthenticated(userInfo);
+
+        setLoading(true);
+      })
+      .catch((err) => {
+        setLoading(true);
+      });
+  }, []);
+
+  if (!isLoading) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
-      <Drawer.Navigator
-        drawerType="slide"
-        screenOptions={{headerShown: false}}
-        drawerContent={(props) => <CustomSidebarMenu {...props} />}>
-        <Drawer.Screen name="Home" component={TabStack} />
-      </Drawer.Navigator>
+      {authenticated ? (
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Home" component={DrawerHome} />
+          <Stack.Screen name="SignIn" component={SignIn} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="Home" component={DrawerHome} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
