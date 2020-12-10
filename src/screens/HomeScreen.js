@@ -27,8 +27,7 @@ const HomeScreen = ({navigation}) => {
   const URL = `https://newsapi.org/v2/top-headlines?country=in&apiKey=7dd89414727643baaa66b6369bddf598`;
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [offset, setOffset] = useState(1);
-  const [isListEnd, setIsListEnd] = useState(false);
+ 
 
   useEffect(() => {
     fetch(URL)

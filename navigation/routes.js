@@ -15,7 +15,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ProfileScreen from '../src/screens/ProfileScreen';
 import Icon from 'react-native-ionicons';
 import LoginScreen from '../src/screens/LoginScreen';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -193,8 +193,8 @@ const RouteApp = ({navigation}) => {
       .then((res) => {
         let userInfo = JSON.parse(res);
         store.dispatch({type: 'USER_DATA', payload: userInfo});
-        setAuthenticated(userInfo);
 
+        setAuthenticated(userInfo);
         setLoading(true);
       })
       .catch((err) => {

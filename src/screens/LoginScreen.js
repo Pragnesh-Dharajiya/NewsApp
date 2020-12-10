@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import {CommonActions} from '@react-navigation/native';
 import React, {Component, useEffect, useState} from 'react';
 import {
@@ -19,6 +18,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import store from '../redux/stores/store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({navigation}) => {
   const userinfo = {username: 'Admin', password: '12345'};
@@ -31,9 +31,10 @@ const LoginScreen = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const _onLogin = () => {
+  const _onLogin =  () => {
     if (userinfo.username === username && userinfo.password === password) {
-      AsyncStorage.setItem('userData', JSON.stringify(userData));
+       AsyncStorage.setItem('@storage_Key', JSON.stringify(userData));
+
       store.dispatch({type: 'USER_DATA', payload: userData});
       navigation.dispatch(
         CommonActions.reset({
