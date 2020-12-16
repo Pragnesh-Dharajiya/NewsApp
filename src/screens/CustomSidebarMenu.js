@@ -16,30 +16,10 @@ import {
 } from '@react-navigation/drawer';
 
 import {CommonActions} from '@react-navigation/native';
-import store from '../redux/stores/store';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomSidebarMenu = ({props, navigation}) => {
-  const _onLogout = () => {
-    Alert.alert('Confirm', 'Are you sure that you want to logout?', [
-      {
-        text: 'Yes',
-        onPress: () => {
-          store.dispatch({type: 'USER_DATA', payload: ''});
-          AsyncStorage.removeItem('userData');
-          //navigation.navigate("SignIn");
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'SignIn'}],
-            }),
-          );
-        },
-      },
-      {text: 'Cancel'},
-    ]);
-  };
-
   return (
     <SafeAreaView style={{flex: 1}}>
       {/*Top Large Image */}
@@ -116,9 +96,6 @@ const CustomSidebarMenu = ({props, navigation}) => {
             />
           )}
           label="Logout"
-          onPress={() => {
-            _onLogout();
-          }}
           labelStyle={styles.drawerMenuText}
         />
         {/* <View style={styles.customItem}>

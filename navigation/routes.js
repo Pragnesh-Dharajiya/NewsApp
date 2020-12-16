@@ -185,40 +185,12 @@ function SignIn() {
 }
 
 const RouteApp = ({navigation}) => {
-  const [authenticated, setAuthenticated] = useState('');
-  const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    AsyncStorage.getItem('userData')
-      .then((res) => {
-        let userInfo = JSON.parse(res);
-        store.dispatch({type: 'USER_DATA', payload: userInfo});
-
-        setAuthenticated(userInfo);
-        setLoading(true);
-      })
-      .catch((err) => {
-        setLoading(true);
-      });
-  }, []);
-
-  if (!isLoading) {
-    return null;
-  }
-
   return (
     <NavigationContainer>
-      {authenticated ? (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Home" component={DrawerHome} />
-          <Stack.Screen name="SignIn" component={SignIn} />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="SignIn" component={SignIn} />
-          <Stack.Screen name="Home" component={DrawerHome} />
-        </Stack.Navigator>
-      )}
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Home" component={DrawerHome} />
+        <Stack.Screen name="SignIn" component={SignIn} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

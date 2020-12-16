@@ -1,0 +1,10 @@
+// CONFIGURATIONS
+export const API_TIMEOUT = 30000;
+
+// API CALLING CONSTANTS
+export const GET_API = 'GET';
+
+// Saga Constants
+export const FETCH_NEWS = 'FETCH_NEWS';
+export const FETCH_NEWS_SUCCESS = 'FETCH_NEWS_SUCCESS';
+export const FETCH_NEWS_FAILURE = 'FETCH_NEWS_FAILURE';

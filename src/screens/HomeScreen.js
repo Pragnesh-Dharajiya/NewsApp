@@ -15,8 +15,11 @@ import {Card} from 'native-base';
 import likeListIcon from '../global/likeListIcon';
 import userHomeIcon from '../global/userHomeListIcon';
 import moment from 'moment';
+import * as articleActions from './../actions/articleActions';
+import {connect} from 'react-redux';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = (props) => {
+  // const {navigation, route} = props;
   // navigation.setOptions({
   //   headerLeft: () => likeListIcon(navigation),
   //   headerRight: () => userHomeIcon(navigation),
@@ -24,24 +27,16 @@ const HomeScreen = ({navigation}) => {
 
   // const API_KEY = '7dd89414727643baaa66b6369bddf598';
 
-  const URL = `https://newsapi.org/v2/top-headlines?country=in&apiKey=7dd89414727643baaa66b6369bddf598`;
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
- 
+  // const URL = `https://newsapi.org/v2/top-headlines?country=in&apiKey=7dd89414727643baaa66b6369bddf598`;
+  // const [articles, setArticles] = useState([]);
+  // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(URL)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson.articles;
-      })
-      .then((articles) => {
-        setArticles(articles);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    props.fetchPosts();
   }, []);
+  console.log('====================================');
+  console.log("Prop Data:",props);
+  console.log('====================================');
 
   const renderFooter = () => {
     return (
@@ -130,7 +125,7 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <View>
-      <FlatList
+      {/* <FlatList
         numColumns={1}
         initialNumToRender={5}
         showsVerticalScrollIndicator={false}
@@ -138,10 +133,9 @@ const HomeScreen = ({navigation}) => {
         renderItem={({item}) => <ArticleItem article={item} />}
         ListFooterComponent={renderFooter}
         initialNumToRender={8}
-  maxToRenderPerBatch={2}
- 
+        maxToRenderPerBatch={2}
         onEndReachedThreshold={0.5}
-      />
+      /> */}
     </View>
   );
 };
@@ -181,4 +175,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+const mapStateToProps = (state) => {
+  return {
+    articles: state.ArticleReducer.articles,
+    isFetching: state.ArticleReducer.isFetching,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchPosts: () => dispatch(articleActions.fetchPosts()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
